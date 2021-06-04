@@ -214,7 +214,7 @@ class ACAN_T4 {
   public: void message_isr (void) ;
 
 //--- Set a external callback function to be used inside ISR
-  public: void setCANRxCallbackEvent(void (*callback)(void);
+  public: void setCANRxCallbackEvent(void (*callback)(void)) ;
 
 //--- Driver instance
   public: static ACAN_T4 can1 ;
