@@ -311,6 +311,12 @@ void flexcan_isr_can3 (void) {
 }
 
 //--------------------------------------------------------------------------------------------------
+//   External Callback function
+//--------------------------------------------------------------------------------------------------
+
+void (*can_rx_event_callback)(void) = NULL;
+
+//--------------------------------------------------------------------------------------------------
 //    Constructor
 //--------------------------------------------------------------------------------------------------
 
@@ -807,6 +813,7 @@ void ACAN_T4::message_isr (void) {
   //--- A trame has been received in RxFIFO ?
     if ((status1 & (1 << 5)) != 0) {
       message_isr_receive () ;
+      if (can_rx_event_callback != NULL) can_rx_event_callback () ; // Call the function if it exists
     }
   //--- RxFIFO warning ? It occurs when the number of messages goes from 4 to 5
     if ((status1 & (1 << 6)) != 0) {
@@ -834,6 +841,14 @@ void ACAN_T4::message_isr (void) {
       FLEXCAN_IFLAG2 (mFlexcanBaseAddress) = status2 ;
     }
   }
+}
+
+//--------------------------------------------------------------------------------------------------
+//   Set a external callback function to be used inside ISR
+//--------------------------------------------------------------------------------------------------
+
+void ACAN_T4::setCANRxCallbackEvent(void (*callback)(void)){
+  can_rx_event_callback = callback;
 }
 
 //--------------------------------------------------------------------------------------------------
